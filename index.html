@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <title>Document</title>
+
+    <script>
+let currentColor = '#000000';
+let isColorSelected = false;
+
+
+function boldText() {
+    document.execCommand("bold", false, null);
+}
+
+function underline(){
+    document.execCommand("underline", false, null);
+}
+
+function italicText(){
+    document.execCommand("italic", false, null);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    let currentColor = '#000000';
+    let isColorSelected = false;
+
+    const colorPicker = document.getElementById('colorPicker');
+    const colorIndicator = document.getElementById('colorIndicator');
+    const editor = document.getElementById('editor');
+
+    
+    colorIndicator.style.backgroundColor = currentColor;
+
+    // Function to open the hidden color picker input
+    window.openColorPicker = function() {
+        colorPicker.click();
+    };
+
+    // When user selects a color
+    colorPicker.addEventListener('input', (e) => {
+        currentColor = e.target.value;
+        isColorSelected = true;
+
+        
+        colorIndicator.style.backgroundColor = currentColor;
+
+        // If text is selected
+        if (window.getSelection().toString()) {
+            document.execCommand("styleWithCSS", false, true);
+            document.execCommand("foreColor", false, currentColor);
+        }
+
+        // Focus back on editor for continued typing
+        editor.focus();
+    });
+
+    //If user select color first and then start to type
+    editor.addEventListener('input', (e) => {
+        if (isColorSelected && e.inputType === 'insertText') {
+            document.execCommand("styleWithCSS", false, true);
+            document.execCommand("foreColor", false, currentColor);
+        }
+    });
+
+    // Apply color on keydown for characters and Enter key
+    editor.addEventListener('keydown', (e) => {
+        if (isColorSelected && (e.key.length === 1 || e.key === 'Enter')) {
+            setTimeout(() => {
+                document.execCommand("styleWithCSS", false, true);
+                document.execCommand("foreColor", false, currentColor);
+            }, 0);
+        }
+    });
+});
+
+
+
+function leftAlign(){
+    document.execCommand("justifyLeft",false, null);
+}
+
+function centerAlign() {
+    document.execCommand("justifyCenter", false, null);
+}
+
+function rightAlign() {
+    document.execCommand("justifyRight", false, null);
+}
+
+function alignJustify(){
+    document.execCommand("justify",false, null);
+}
+
+function undo(){
+    document.execCommand("undo",false, null);
+}
+
+function redo(){
+    document.execCommand("redo",false, null);
+}
+
+
+    </script>
+
+    <style>
+        body{
+    background-color:white;
+}
+#container{
+    border:solid 2px;
+    background-color: rgb(88, 88, 180);
+    border-color:white;
+    border-radius:5px;
+    padding:5px;
+    max-width:800px;
+}
+
+#toolbar{
+    display:flex;
+    gap:20px;
+    flex-direction:row;
+    margin-bottom: 2px;
+}
+.toolbar-Btn{
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color:black;
+    
+    
+}
+
+.editor-container{
+    max-width: 800px;
+    margin: solid 5px;
+    border: solid 2px;
+    border-radius: 5px;
+    background-color: white;  
+    border-color: #ccc;       
+    height: 500px;
+    color: black;             
+    padding: 15px;            
+    overflow-y: auto;         
+}
+.toolbar-Btn:hover{
+    background-color:rgb(211, 209, 193);
+}
+
+.color-button-container {
+    position: relative;
+    display: inline-block;
+}
+
+.color-indicator {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background-color: #000000;
+    border-radius: 1px;
+}
+
+#colorPicker {
+    position: absolute;
+    opacity: 0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="toolbar">
+            <button class="toolbar-Btn" title="Italic" onclick="italicText()">
+                <i class="fa-solid fa-italic"></i>
+            </button>
+            <button onclick="boldText()" class="toolbar-Btn"> 
+                <i class="fa-solid fa-bold" ></i>
+            </button>
+            <button class="toolbar-Btn" title="Underline" onclick="underline()">   
+                <i class="fa-solid fa-underline"></i>
+            </button>
+            <div class="color-button-container">
+                <button class="toolbar-Btn" title="Text Color" onclick="openColorPicker()">
+                    <i class="fa-solid fa-font"></i>
+                </button>
+                <div class="color-indicator" id="colorIndicator"></div>
+                <input type="color" id="colorPicker" style="position: absolute; opacity: 0; width: 32px; height: 32px;">
+            </div>
+            <button onclick="leftAlign()" class="toolbar-Btn">
+                <i class="fa-solid fa fa-align-left"></i>
+            </button>
+            <button onclick="centerAlign()" class="toolbar-Btn">
+                <i class="fa-solid fa fa-align-center"></i>
+            </button>
+            <button onclick="rightAlign()" class="toolbar-Btn">
+                 <i class="fa-solid fa fa-align-right"></i>
+            </button>
+            <button onclick="alignJustify()" class="toolbar-Btn">
+                <i class="fa-solid fa fa-align-justify"></i>
+            </button>
+            
+            <button onclick="undo()" class="toolbar-Btn">↩</button>
+            <button onclick="redo()" class="toolbar-Btn">↪</button>
+        </div>
+     
+        
+    </div> 
+    <div class="editor-container" contenteditable="true" id="editor">
+
+        
+
+
+    </div>
+    
+    
+    
+</body>
+
+</html>
+
+
